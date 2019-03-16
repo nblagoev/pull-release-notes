@@ -1,0 +1,15 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib/",
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/lib": true,
+  },
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/lib": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.tslint": true
+  },
+}

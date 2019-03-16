@@ -1,0 +1,71 @@
+{
+  "name": "pull-release-notes",
+  "version": "0.0.1",
+  "description": "pull-release-notes",
+  "license": "MIT",
+  "author": {
+    "name": "Nikolay Blagoev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nblagoev/pull-release-notes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nblagoev/pull-release-notes/issues"
+  },
+  "homepage": "https://github.com/nblagoev/pull-release-notes#readme",
+  "keywords": [
+    "github",
+    "pull-request",
+    "changelog",
+    "release-notes"
+  ],
+  "files": [
+    "lib"
+  ],
+  "main": "./lib/releaseNotes",
+  "types": "./lib/releaseNotes",
+  "bin": {
+    "pull-release-notes": "./lib/main.js"
+  },
+  "scripts": {
+    "clean": "rimraf lib && rimraf coverage",
+    "lint": "tslint --force --format verbose \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run clean && npm run lint && echo Using TypeScript && tsc --version",
+    "build": "tsc",
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "watch": "npm run build -- --watch",
+    "watch:test": "jest --watch"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.19.0",
+    "@types/yargs": "^12.0.9",
+    "expand-home-dir": "^0.0.3",
+    "moment": "^2.24.0",
+    "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.3",
+    "@types/node": "^10.11.4",
+    "coveralls": "^3.0.2",
+    "jest": "^23.6.0",
+    "prettier": "^1.14.3",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^23.10.3",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "typescript": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testMatch": [
+      "**/test/**/*.ts"
+    ]
+  }
+}
