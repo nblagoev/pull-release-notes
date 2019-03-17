@@ -1,6 +1,6 @@
 {
   "name": "pull-release-notes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "pull-release-notes",
   "license": "MIT",
   "author": {
@@ -42,13 +42,13 @@
   },
   "dependencies": {
     "@octokit/rest": "^16.19.0",
-    "@types/yargs": "^12.0.9",
     "moment": "^2.24.0",
     "yargs": "^13.2.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "@types/node": "^11.11.3",
+    "@types/yargs": "^12.0.9",
     "codecov": "^3.2.0",
     "jest": "^24.5.0",
     "prettier": "^1.14.3",
