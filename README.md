@@ -1,12 +1,12 @@
-[![NPM package](https://img.shields.io/npm/v/pull-release-notes.svg)](https://img.shields.io/npm/v/pull-release-notes.svg)
-[![Build Status](https://travis-ci.org/nblagoev/pull-release-notes.svg?branch=master)](https://travis-ci.org/nblagoev/pull-release-notes.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/nblagoev/pull-release-notes/badge.svg?branch=master)](https://coveralls.io/github/nblagoev/pull-release-notes?branch=master)
-[![Dependencies Status](https://img.shields.io/librariesio/github/nblagoev/pull-release-notes.svg)](https://img.shields.io/librariesio/github/nblagoev/pull-release-notes.svg)
-
 
 # pull-release-notes
 
-A command line utility to generate a PR changelog between two refs.
+> A command line utility to generate a PR changelog between two refs.
+
+[![NPM package](https://img.shields.io/npm/v/pull-release-notes.svg)](https://npmjs.org/package/pull-release-notes)
+[![Build Status](https://travis-ci.org/nblagoev/pull-release-notes.svg?branch=master)](https://travis-ci.org/nblagoev/pull-release-notes)
+[![Dependencies Status](https://david-dm.org/nblagoev/pull-release-notes/status.svg)](https://david-dm.org/nblagoev/pull-release-notes)
+[![Coverage Status](https://codecov.io/gh/nblagoev/pull-release-notes/branch/master/graph/badge.svg)](https://codecov.io/gh/nblagoev/pull-release-notes)
 
 ## Usage
 

@@ -5,4 +5,4 @@ script:
   - npm run coverage
   - npm run build
 after_script:
-  - 'cat coverage/lcov.info | ./node_modules/.bin/coveralls'
+  - codecov -f coverage/*.json
