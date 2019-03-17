@@ -22,7 +22,7 @@ export class ReleaseNotes {
 
     async pull(token?: string): Promise<string> {
         const octokit = new Octokit({
-            auth: `token ${token || process.env.GITHUB_TOKEN}`,
+            auth: `token ${token || process.env.GITHUB_TOKEN}`
         })
 
         return this.getFormattedPullRequests(octokit)

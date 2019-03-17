@@ -54,7 +54,7 @@ export class Commits {
             message: commit.commit.message,
             date: moment(commit.commit.committer.date),
             author: commit.commit.author.name,
-            prNumber: undefined,
+            prNumber: undefined
         }))
     }
 

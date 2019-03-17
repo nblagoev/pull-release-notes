@@ -34,7 +34,7 @@ const releaseNotes = new ReleaseNotes({
     repo,
     fromTag,
     toTag,
-    formatter: ReleaseNotes.defaultFormatter,
+    formatter: ReleaseNotes.defaultFormatter
 })
 
 releaseNotes
