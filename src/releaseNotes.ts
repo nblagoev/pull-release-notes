@@ -14,13 +14,13 @@ export interface ReleaseNotesOptions {
 }
 
 export class ReleaseNotes {
-    public static defaultFormatter(pullRequest: PullRequestInfo): string {
+    static defaultFormatter(pullRequest: PullRequestInfo): string {
         return `* [#${pullRequest.number}](${pullRequest.htmlURL}) - ${pullRequest.title}`
     }
 
     constructor(private options: ReleaseNotesOptions) {}
 
-    public async pull(token?: string): Promise<string> {
+    async pull(token?: string): Promise<string> {
         const octokit = new Octokit({
             auth: `token ${token || process.env.GITHUB_TOKEN}`,
         })
@@ -52,18 +52,13 @@ export class ReleaseNotes {
         Logger.log(`Fetching PRs between dates ${fromDate.toISOString()} ${toDate.toISOString()} for ${owner}/${repo}`)
 
         const pullRequestsApi = new PullRequests(octokit)
-        const pullRequests = await pullRequestsApi.getBetweenDates(
-            owner,
-            repo,
-            fromDate,
-            toDate
-        )
+        const pullRequests = await pullRequestsApi.getBetweenDates(owner, repo, fromDate, toDate)
 
         Logger.log(`Found ${pullRequests.length} merged PRs for ${owner}/${repo}`)
 
         const prCommits = pullRequestsApi.filterCommits(commits)
         const filteredPullRequests = []
-        const pullRequestsByNumber: any = {}
+        const pullRequestsByNumber: { [key: number]: PullRequestInfo } = {}
 
         for (const pr of pullRequests) {
             pullRequestsByNumber[pr.number] = pr
@@ -86,7 +81,10 @@ export class ReleaseNotes {
                     Logger.warn(`${owner}/${repo}#${commit.prNumber} not found! Commit text: ${commit.summary}`)
                 }
             } else {
-                Logger.log(`${owner}/${repo}#${commit.prNumber} not in date range, likely a merge commit from a fork-to-fork PR`)
+                Logger.log(
+                    `${owner}/${repo}#${commit.prNumber} not in date range, ` +
+                        `likely a merge commit from a fork-to-fork PR`
+                )
             }
         }
 

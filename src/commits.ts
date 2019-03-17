@@ -12,10 +12,23 @@ export interface CommitInfo {
     prNumber: number | undefined
 }
 
+interface CompareResposeCommitItem {
+    sha: string
+    commit: {
+        message: string
+        committer: {
+            date: string
+        }
+        author: {
+            name: string
+        }
+    }
+}
+
 export class Commits {
     constructor(private octokit: Octokit) {}
 
-    public async getDiff(owner: string, repo: string, base: string, head: string): Promise<CommitInfo[]> {
+    async getDiff(owner: string, repo: string, base: string, head: string): Promise<CommitInfo[]> {
         const commits: CommitInfo[] = await this.getDiffRemote(owner, repo, base, head)
         return this.sortCommits(commits)
     }
@@ -23,17 +36,18 @@ export class Commits {
     private async getDiffRemote(owner: string, repo: string, base: string, head: string): Promise<CommitInfo[]> {
         // Fetch comparisons recursively until we don't find any commits
         // This is because the GitHub API limits the number of commits returned in a single response.
-        let commits: any[] = []
+        let commits: CompareResposeCommitItem[] = []
         let compareHead = head
         while (true) {
-            const compareResult = await this.octokit.repos.compareCommits({owner, repo, base, head: compareHead, })
-            if (compareResult.data.total_commits === 0) { break }
+            const compareResult = await this.octokit.repos.compareCommits({ owner, repo, base, head: compareHead })
+            if (compareResult.data.total_commits === 0) {
+                break
+            }
             commits = compareResult.data.commits.concat(commits)
             compareHead = commits[0].sha + "^"
         }
 
-        Logger.log(`Found ${commits.length} commits from the GitHub API for ${owner}/${repo}`
-        )
+        Logger.log(`Found ${commits.length} commits from the GitHub API for ${owner}/${repo}`)
         return commits.map(commit => ({
             sha: commit.sha,
             summary: commit.commit.message.split("\n")[0],
@@ -46,17 +60,22 @@ export class Commits {
 
     private sortCommits(commits: CommitInfo[]): CommitInfo[] {
         const commitsResult = []
-        const shas: any = {}
+        const shas: { [key: string]: boolean } = {}
 
         for (const commit of commits) {
-            if (shas[commit.sha]) { continue }
+            if (shas[commit.sha]) {
+                continue
+            }
             shas[commit.sha] = true
             commitsResult.push(commit)
         }
 
         commitsResult.sort((a, b) => {
-            if (a.date.isBefore(b.date)) { return -1 }
-            else if (b.date.isBefore(a.date)) { return 1 }
+            if (a.date.isBefore(b.date)) {
+                return -1
+            } else if (b.date.isBefore(a.date)) {
+                return 1
+            }
             return 0
         })
 

@@ -1,16 +1,16 @@
-// tslint:disable: no-console
+// tslint:disable: no-any
 import * as util from "util"
 
 export class Logger {
-    public static verbose: boolean = true
+    static verbose = true
 
-    public static log(format: any, ...args: any[]) {
+    static log(format: any, ...args: any[]) {
         if (this.verbose) {
             console.log(util.format(format, ...args))
         }
     }
 
-    public static warn(format: any, ...args: any[]) {
+    static warn(format: any, ...args: any[]) {
         console.warn(util.format(format, ...args))
     }
 }

@@ -16,7 +16,7 @@ export interface PullRequestInfo {
 export class PullRequests {
     constructor(private octokit: Octokit) {}
 
-    public async getSingle(owner: string, repo: string, prNumber: number): Promise<PullRequestInfo | null> {
+    async getSingle(owner: string, repo: string, prNumber: number): Promise<PullRequestInfo | null> {
         try {
             const pr = await this.octokit.pulls.get({ owner, repo, number: prNumber })
 
@@ -34,7 +34,7 @@ export class PullRequests {
         }
     }
 
-    public async getBetweenDates(
+    async getBetweenDates(
         owner: string,
         repo: string,
         fromDate: moment.Moment,
@@ -51,34 +51,35 @@ export class PullRequests {
 
         for await (const response of this.octokit.paginate.iterator(options)) {
             const prs: Octokit.PullsListResponse = response.data
-            prs
-                .filter(pr => (
+            prs.filter(
+                pr =>
                     !!pr.merged_at &&
                     fromDate.isBefore(moment(pr.merged_at)) &&
                     toDate.isSameOrAfter(moment(pr.merged_at))
-                ))
-                .forEach(pr => {
-                    mergedPRs.push({
-                        number: pr.number,
-                        title: pr.title,
-                        htmlURL: pr.html_url,
-                        mergedAt: moment(pr.merged_at),
-                        author: pr.user.login,
-                        repoName: pr.base.repo.full_name,
-                    })
+            ).forEach(pr => {
+                mergedPRs.push({
+                    number: pr.number,
+                    title: pr.title,
+                    htmlURL: pr.html_url,
+                    mergedAt: moment(pr.merged_at),
+                    author: pr.user.login,
+                    repoName: pr.base.repo.full_name,
                 })
+            })
         }
 
         return this.sortPullRequests(mergedPRs)
     }
 
-    public filterCommits(commits: CommitInfo[]) {
+    filterCommits(commits: CommitInfo[]) {
         const prRegex = /Merge pull request #(\d+)/
         const filteredCommits = []
 
         for (const commit of commits) {
             const match = commit.summary.match(prRegex)
-            if (!match) { continue }
+            if (!match) {
+                continue
+            }
             commit.prNumber = Number.parseInt(match[1], 10)
             filteredCommits.push(commit)
         }
@@ -88,8 +89,11 @@ export class PullRequests {
 
     private sortPullRequests(pullRequests: PullRequestInfo[]): PullRequestInfo[] {
         pullRequests.sort((a, b) => {
-            if (a.mergedAt.isBefore(b.mergedAt)) { return -1 }
-            else if (b.mergedAt.isBefore(a.mergedAt)) { return 1 }
+            if (a.mergedAt.isBefore(b.mergedAt)) {
+                return -1
+            } else if (b.mergedAt.isBefore(a.mergedAt)) {
+                return 1
+            }
             return 0
         })
 

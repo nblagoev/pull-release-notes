@@ -31,9 +31,10 @@
   "scripts": {
     "clean": "rimraf lib && rimraf coverage",
     "lint": "tslint --force --format verbose \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,test}/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "prebuild": "npm run clean && npm run lint && echo Using TypeScript && tsc --version",
-    "build": "tsc",
+    "prebuild": "npm run clean && npm run format && npm run lint && echo Using TypeScript && tsc --version",
+    "build": "tsc --pretty",
     "test": "jest",
     "coverage": "jest --coverage",
     "watch": "npm run build -- --watch",

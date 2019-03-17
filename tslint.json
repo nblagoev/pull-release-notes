@@ -10,6 +10,8 @@
     "max-line-length": [true, 120],
     "linebreak-style": [true, "LF"],
     "quotemark": [true, "double", "avoid-escape"],
+    "interface-name": false,
+    "member-access": [true, "no-public"],
     "no-console": false,
     "array-type": [true, "array"],
     "object-literal-sort-keys": false,
