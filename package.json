@@ -42,7 +42,6 @@
   "dependencies": {
     "@octokit/rest": "^16.19.0",
     "@types/yargs": "^12.0.9",
-    "expand-home-dir": "^0.0.3",
     "moment": "^2.24.0",
     "yargs": "^13.2.2"
   },
