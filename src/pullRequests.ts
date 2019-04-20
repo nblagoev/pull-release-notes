@@ -11,6 +11,7 @@ export interface PullRequestInfo {
     mergedAt: moment.Moment
     author: string
     repoName: string
+    body: string
 }
 
 export class PullRequests {
@@ -26,7 +27,8 @@ export class PullRequests {
                 htmlURL: pr.data.html_url,
                 mergedAt: moment(pr.data.merged_at),
                 author: pr.data.user.login,
-                repoName: pr.data.base.repo.full_name
+                repoName: pr.data.base.repo.full_name,
+                body: pr.data.body
             }
         } catch (e) {
             Logger.warn("Cannot find PR", `${owner}/${repo}#${prNumber}`, e.code, e.message)
@@ -63,7 +65,8 @@ export class PullRequests {
                     htmlURL: pr.html_url,
                     mergedAt: moment(pr.merged_at),
                     author: pr.user.login,
-                    repoName: pr.base.repo.full_name
+                    repoName: pr.base.repo.full_name,
+                    body: pr.body
                 })
             })
         }

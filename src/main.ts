@@ -40,7 +40,7 @@ const releaseNotes = new ReleaseNotes({
 releaseNotes
     .pull()
     .then(output => {
-        console.log(output)
+        console.log(`\n${output}`)
     })
     .catch(err => {
         console.error("error", err)

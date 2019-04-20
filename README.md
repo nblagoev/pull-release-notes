@@ -18,7 +18,7 @@ npm install -g pull-release-notes
 This relies on the GitHub API; you should [create an API token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), and place it in the `GITHUB_TOKEN` environment variable. It needs `public_repo` access if your repo is public, and `repo` access if your repo is private.
 
 ### CLI
-Generate a changelog with merget pull requests between v1.0.0 and v1.1.0
+Generate a changelog with merged pull requests between v1.0.0 and v1.1.0
 
 ```bash
 pull-release-notes -v -r user/repo v1.0.0...v1.1.0 > CHANGELOG.md
@@ -46,12 +46,4 @@ releaseNotes.pull()
     })
 ```
 
-You can also write your own formatter:
-
-```ts
-import { PullRequestInfo } from "pull-release-notes"
-
-function myChangelogFormatter(pr: PullRequestInfo): string {
-    return `* [#${pr.number}](${pr.htmlURL}) - ${pr.title}`
-}
-```
+You can also write your own formatter. See examples [here](./src/formatters.ts).

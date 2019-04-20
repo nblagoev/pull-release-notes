@@ -1,47 +1,62 @@
 import * as Octokit from "@octokit/rest"
 
 import { Commits } from "./commits"
+import * as formatters from "./formatters"
 import { Logger } from "./logger"
 import { PullRequests, PullRequestInfo } from "./pullRequests"
 
-export { PullRequestInfo } from "./pullRequests"
 export interface ReleaseNotesOptions {
     owner: string
     repo: string
     fromTag: string
     toTag: string
-    formatter: (pr: PullRequestInfo) => string
+    formatter: {
+        pullRequestTitle: (pullRequest?: PullRequestInfo) => string
+        pullRequestNotable: (pullRequest?: PullRequestInfo) => string
+        notableChanges: (notableChanges?: string) => string
+        allChanges: (allChanges?: string) => string
+    }
 }
 
 export class ReleaseNotes {
-    static defaultFormatter(pullRequest: PullRequestInfo): string {
-        return `* [#${pullRequest.number}](${pullRequest.htmlURL}) - ${pullRequest.title}`
+    static get defaultFormatter() {
+        return {
+            pullRequestTitle: formatters.defaultPullRequestTitleFormatter,
+            pullRequestNotable: formatters.defaultPullRequestNotableFormatter,
+            notableChanges: formatters.defaultNotableChangesFormatter,
+            allChanges: formatters.defaultAllChangesFormatter
+        }
     }
 
-    constructor(private options: ReleaseNotesOptions) {}
+    constructor(private options: ReleaseNotesOptions) {
+        options.formatter = {
+            ...ReleaseNotes.defaultFormatter,
+            ...options.formatter
+        }
+    }
 
     async pull(token?: string): Promise<string> {
         const octokit = new Octokit({
             auth: `token ${token || process.env.GITHUB_TOKEN}`
         })
 
-        return this.getFormattedPullRequests(octokit)
+        const mergedPullRequests = await this.getMergedPullRequests(octokit)
+        const notableChanges = this.getFormatedChanges(mergedPullRequests, this.options.formatter.pullRequestNotable)
+        const allChanges = this.getFormatedChanges(mergedPullRequests, this.options.formatter.pullRequestTitle)
+        const format = this.options.formatter
+
+        return `${format.notableChanges(notableChanges)}${format.allChanges(allChanges)}`
     }
 
-    private async getFormattedPullRequests(octokit: Octokit): Promise<string> {
-        const { owner, repo, fromTag, toTag, formatter } = this.options
+    private async getMergedPullRequests(octokit: Octokit): Promise<PullRequestInfo[]> {
+        const { owner, repo, fromTag, toTag } = this.options
         Logger.log("Comparing", `${owner}/${repo}`, `${fromTag}...${toTag}`)
-
-        if (!formatter) {
-            Logger.warn("A `formatter` must be specified!")
-            return ""
-        }
 
         const commitsApi = new Commits(octokit)
         const commits = await commitsApi.getDiff(owner, repo, fromTag, toTag)
 
         if (commits.length === 0) {
-            return ""
+            return []
         }
 
         const firstCommit = commits[0]
@@ -69,28 +84,33 @@ export class ReleaseNotes {
                 continue
             }
 
+            const prRef = `${owner}/${repo}#${commit.prNumber}`
+
             if (pullRequestsByNumber[commit.prNumber]) {
                 filteredPullRequests.push(pullRequestsByNumber[commit.prNumber])
             } else if (fromDate.toISOString() === toDate.toISOString()) {
-                Logger.log(`${owner}/${repo}#${commit.prNumber} not in date range, fetching explicitly`)
+                Logger.log(`${prRef} not in date range, fetching explicitly`)
                 const pullRequest = await pullRequestsApi.getSingle(owner, repo, commit.prNumber)
 
                 if (pullRequest) {
                     filteredPullRequests.push(pullRequest)
                 } else {
-                    Logger.warn(`${owner}/${repo}#${commit.prNumber} not found! Commit text: ${commit.summary}`)
+                    Logger.warn(`${prRef} not found! Commit text: ${commit.summary}`)
                 }
             } else {
-                Logger.log(
-                    `${owner}/${repo}#${commit.prNumber} not in date range, ` +
-                        `likely a merge commit from a fork-to-fork PR`
-                )
+                Logger.log(`${prRef} not in date range, ` + `likely a merge commit from a fork-to-fork PR`)
             }
         }
 
+        return pullRequests
+    }
+
+    private getFormatedChanges(pullRequests: PullRequestInfo[], formatter: (pr?: PullRequestInfo) => string): string {
         if (pullRequests.length) {
             return pullRequests.reduce((result, pr) => {
-                return `${result}${formatter(pr)}\n`
+                let formated = formatter(pr)
+                formated = !!formated ? `${formated}\n` : ""
+                return `${result}${formated}`
             }, "")
         } else {
             return ""
