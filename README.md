@@ -6,6 +6,7 @@
 [![NPM package](https://img.shields.io/npm/v/pull-release-notes.svg)](https://npmjs.org/package/pull-release-notes)
 [![Build Status](https://travis-ci.org/nblagoev/pull-release-notes.svg?branch=master)](https://travis-ci.org/nblagoev/pull-release-notes)
 [![Dependencies Status](https://david-dm.org/nblagoev/pull-release-notes/status.svg)](https://david-dm.org/nblagoev/pull-release-notes)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nblagoev/pull-release-notes)](https://dependabot.com)
 [![Coverage Status](https://codecov.io/gh/nblagoev/pull-release-notes/branch/master/graph/badge.svg)](https://codecov.io/gh/nblagoev/pull-release-notes)
 
 ## Usage
