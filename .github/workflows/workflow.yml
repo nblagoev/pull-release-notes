@@ -1,4 +1,4 @@
-name: Node CI
+name: build
 
 on: [push]
 
@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [10.x, 12.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -25,4 +25,4 @@ jobs:
         npm run build
       env:
         CI: true
-    - run: codecov -f coverage/*.json
+    - run: ./node_modules/.bin/codecov -f coverage/*.json
