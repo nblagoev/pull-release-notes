@@ -1,14 +1,14 @@
 {
-  "name": "pull-release-notes",
+  "name": "@nblagoev/pull-release-notes",
   "version": "1.2.1",
-  "description": "pull-release-notes",
+  "description": "A command line utility to generate a PR changelog between two refs.",
   "license": "MIT",
   "author": {
     "name": "Nikolay Blagoev"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nblagoev/pull-release-notes.git"
+    "url": "git@github.com:nblagoev/pull-release-notes.git"
   },
   "bugs": {
     "url": "https://github.com/nblagoev/pull-release-notes/issues"

@@ -12,8 +12,13 @@
 ## Usage
 
 ### Install
+Create local `.npmrc` in your project folder:
+```
+@nblagoev:registry=https://npm.pkg.github.com/
+```
+
 ```bash
-npm install -g pull-release-notes
+npm install @nblagoev/pull-release-notes --save-dev
 ```
 
 This relies on the GitHub API; you should [create an API token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/), and place it in the `GITHUB_TOKEN` environment variable. It needs `public_repo` access if your repo is public, and `repo` access if your repo is private.
