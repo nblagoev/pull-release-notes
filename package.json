@@ -41,7 +41,7 @@
     "watch:test": "jest --watch"
   },
   "dependencies": {
-    "@octokit/rest": "^16.19.0",
+    "@octokit/rest": "^16.30.1",
     "moment": "^2.24.0",
     "yargs": "^14.0.0"
   },
