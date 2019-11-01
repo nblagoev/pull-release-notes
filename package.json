@@ -43,7 +43,7 @@
   "dependencies": {
     "@octokit/rest": "^16.19.0",
     "moment": "^2.24.0",
-    "yargs": "^14.0.0"
+    "yargs": "^14.2.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
