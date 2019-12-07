@@ -41,23 +41,23 @@
     "watch:test": "jest --watch"
   },
   "dependencies": {
-    "@octokit/rest": "^16.19.0",
+    "@octokit/rest": "^16.35.0",
     "moment": "^2.24.0",
-    "yargs": "^14.0.0"
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^24.0.23",
     "@types/node": "^11.11.3",
-    "@types/yargs": "^13.0.0",
-    "codecov": "^3.2.0",
+    "@types/yargs": "^13.0.3",
+    "codecov": "^3.6.1",
     "jest": "^24.9.0",
-    "prettier": "^1.14.3",
+    "prettier": "^1.19.1",
     "rimraf": "^2.6.2",
-    "ts-jest": "^24.0.0",
-    "ts-node": "^8.0.3",
-    "tslint": "^5.19.0",
+    "ts-jest": "^24.2.0",
+    "ts-node": "^8.5.4",
+    "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.7.3"
   },
   "engines": {
     "node": ">=10.0.0"
