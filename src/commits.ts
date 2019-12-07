@@ -12,19 +12,6 @@ export interface CommitInfo {
     prNumber: number | undefined
 }
 
-interface CompareResposeCommitItem {
-    sha: string
-    commit: {
-        message: string
-        committer: {
-            date: string
-        }
-        author: {
-            name: string
-        }
-    }
-}
-
 export class Commits {
     constructor(private octokit: Octokit) {}
 
@@ -36,7 +23,7 @@ export class Commits {
     private async getDiffRemote(owner: string, repo: string, base: string, head: string): Promise<CommitInfo[]> {
         // Fetch comparisons recursively until we don't find any commits
         // This is because the GitHub API limits the number of commits returned in a single response.
-        let commits: CompareResposeCommitItem[] = []
+        let commits: Octokit.ReposCompareCommitsResponseCommitsItem[] = []
         let compareHead = head
         while (true) {
             const compareResult = await this.octokit.repos.compareCommits({ owner, repo, base, head: compareHead })
