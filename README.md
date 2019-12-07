@@ -3,7 +3,7 @@
 
 > A command line utility to generate a PR changelog between two refs.
 
-[![NPM package](https://img.shields.io/npm/v/pull-release-notes.svg)](https://npmjs.org/package/pull-release-notes)
+[![NPM package](https://img.shields.io/npm/v/@nblagoev/pull-release-notes.svg)](https://npmjs.org/package/@nblagoev/pull-release-notes)
 [![Build Status](https://github.com/nblagoev/pull-release-notes/workflows/build/badge.svg)](https://github.com/nblagoev/pull-release-notes/actions)
 [![Dependencies Status](https://david-dm.org/nblagoev/pull-release-notes/status.svg)](https://david-dm.org/nblagoev/pull-release-notes)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nblagoev/pull-release-notes)](https://dependabot.com)
