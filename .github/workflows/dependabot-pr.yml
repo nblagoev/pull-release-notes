@@ -25,16 +25,16 @@ jobs:
         npm run build
       env:
         CI: true
-  
+
   autoapprove:
     name: Approve pull request
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     if: github.base_ref == 'master' && (github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]')
     steps:
     - uses: hmarr/auto-approve-action@v2.0.0
       with:
         github-token: "${{ secrets.GITHUB_TOKEN }}"
-  
+
   automerge:
     name: Merge pull request
     runs-on: ubuntu-latest

@@ -10,6 +10,7 @@
     "**/lib": false
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll.eslint": true
   },
+  "eslint.validate": ["javascript", "typescript"]
 }

@@ -3,7 +3,7 @@ import * as Octokit from "@octokit/rest"
 import { Commits } from "./commits"
 import * as formatters from "./formatters"
 import { Logger } from "./logger"
-import { PullRequests, PullRequestInfo } from "./pullRequests"
+import { PullRequestInfo, PullRequests } from "./pullRequests"
 
 export interface ReleaseNotesOptions {
     owner: string
@@ -98,7 +98,7 @@ export class ReleaseNotes {
                     Logger.warn(`${prRef} not found! Commit text: ${commit.summary}`)
                 }
             } else {
-                Logger.log(`${prRef} not in date range, ` + `likely a merge commit from a fork-to-fork PR`)
+                Logger.log(`${prRef} not in date range, likely a merge commit from a fork-to-fork PR`)
             }
         }
 
@@ -112,8 +112,7 @@ export class ReleaseNotes {
                 formated = !!formated ? `${formated}\n` : ""
                 return `${result}${formated}`
             }, "")
-        } else {
-            return ""
         }
+        return ""
     }
 }

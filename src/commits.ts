@@ -31,7 +31,7 @@ export class Commits {
                 break
             }
             commits = compareResult.data.commits.concat(commits)
-            compareHead = commits[0].sha + "^"
+            compareHead = `${commits[0].sha}^`
         }
 
         Logger.log(`Found ${commits.length} commits from the GitHub API for ${owner}/${repo}`)
