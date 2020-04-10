@@ -15,9 +15,9 @@ jobs:
     - run: npm install -g yarn
     - name: install and build
       run: |
-        npm install
-        npm run coverage
-        npm run build
+        yarn install
+        yarn run coverage
+        yarn run build
       env:
         CI: true
     - run: ./node_modules/.bin/codecov -f coverage/*.json
