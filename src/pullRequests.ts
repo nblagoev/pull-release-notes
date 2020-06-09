@@ -1,4 +1,4 @@
-import * as Octokit from "@octokit/rest"
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest"
 import * as moment from "moment"
 
 import { CommitInfo } from "./commits"
@@ -19,7 +19,7 @@ export class PullRequests {
 
     async getSingle(owner: string, repo: string, prNumber: number): Promise<PullRequestInfo | null> {
         try {
-            const pr = await this.octokit.pulls.get({ owner, repo, number: prNumber })
+            const pr = await this.octokit.pulls.get({ owner, repo, pull_number: prNumber })
 
             return {
                 number: pr.data.number,
@@ -52,13 +52,14 @@ export class PullRequests {
         })
 
         for await (const response of this.octokit.paginate.iterator(options)) {
-            const prs: Octokit.PullsListResponse = response.data
+            type PullsListData = RestEndpointMethodTypes["pulls"]["list"]["response"]["data"]
+            const prs: PullsListData = response.data as PullsListData
             prs.filter(
-                pr =>
+                (pr) =>
                     !!pr.merged_at &&
                     fromDate.isBefore(moment(pr.merged_at)) &&
                     toDate.isSameOrAfter(moment(pr.merged_at))
-            ).forEach(pr => {
+            ).forEach((pr) => {
                 mergedPRs.push({
                     number: pr.number,
                     title: pr.title,
@@ -74,7 +75,7 @@ export class PullRequests {
         return this.sortPullRequests(mergedPRs)
     }
 
-    filterCommits(commits: CommitInfo[]) {
+    filterCommits(commits: CommitInfo[]): CommitInfo[] {
         const prRegex = /Merge pull request #(\d+)/
         const filteredCommits = []
 
