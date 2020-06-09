@@ -1,4 +1,4 @@
-import * as Octokit from "@octokit/rest"
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest"
 import * as moment from "moment"
 
 import { Logger } from "./logger"
@@ -23,7 +23,7 @@ export class Commits {
     private async getDiffRemote(owner: string, repo: string, base: string, head: string): Promise<CommitInfo[]> {
         // Fetch comparisons recursively until we don't find any commits
         // This is because the GitHub API limits the number of commits returned in a single response.
-        let commits: Octokit.ReposCompareCommitsResponseCommitsItem[] = []
+        let commits: RestEndpointMethodTypes["repos"]["compareCommits"]["response"]["data"]["commits"] = []
         let compareHead = head
         while (true) {
             const compareResult = await this.octokit.repos.compareCommits({ owner, repo, base, head: compareHead })
@@ -35,7 +35,7 @@ export class Commits {
         }
 
         Logger.log(`Found ${commits.length} commits from the GitHub API for ${owner}/${repo}`)
-        return commits.map(commit => ({
+        return commits.map((commit) => ({
             sha: commit.sha,
             summary: commit.commit.message.split("\n")[0],
             message: commit.commit.message,

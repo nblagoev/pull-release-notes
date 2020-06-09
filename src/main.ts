@@ -39,9 +39,9 @@ const releaseNotes = new ReleaseNotes({
 
 releaseNotes
     .pull()
-    .then(output => {
+    .then((output) => {
         console.log(`\n${output}`)
     })
-    .catch(err => {
+    .catch((err) => {
         console.error("error", err)
     })
