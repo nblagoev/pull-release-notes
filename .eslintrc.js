@@ -20,7 +20,7 @@ module.exports = {
         jest: true
     },
     rules: {
-        "@typescript-eslint/array-type": ["error", { "default": "array" }],
+        "@typescript-eslint/array-type": ["error", { default: "array" }],
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/prefer-for-of": "error",
         "@typescript-eslint/no-parameter-properties": "off",
@@ -69,6 +69,7 @@ module.exports = {
             }
         ],
 
+        "arrow-parens": ["warn", "as-needed"],
         "no-constant-condition": ["warn", { checkLoops: false }],
         "no-else-return": "warn",
         "no-empty": ["warn", { allowEmptyCatch: true }],

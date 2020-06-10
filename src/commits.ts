@@ -35,7 +35,7 @@ export class Commits {
         }
 
         Logger.log(`Found ${commits.length} commits from the GitHub API for ${owner}/${repo}`)
-        return commits.map((commit) => ({
+        return commits.map(commit => ({
             sha: commit.sha,
             summary: commit.commit.message.split("\n")[0],
             message: commit.commit.message,

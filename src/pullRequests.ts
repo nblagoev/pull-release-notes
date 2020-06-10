@@ -55,11 +55,11 @@ export class PullRequests {
             type PullsListData = RestEndpointMethodTypes["pulls"]["list"]["response"]["data"]
             const prs: PullsListData = response.data as PullsListData
             prs.filter(
-                (pr) =>
+                pr =>
                     !!pr.merged_at &&
                     fromDate.isBefore(moment(pr.merged_at)) &&
                     toDate.isSameOrAfter(moment(pr.merged_at))
-            ).forEach((pr) => {
+            ).forEach(pr => {
                 mergedPRs.push({
                     number: pr.number,
                     title: pr.title,

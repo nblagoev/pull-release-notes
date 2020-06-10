@@ -7,6 +7,7 @@ module.exports = {
     trailingComma: "none",
     singleQuote: false,
     quoteProps: "consistent",
+    arrowParens: "avoid",
     overrides: [
         {
             files: "*.json",
