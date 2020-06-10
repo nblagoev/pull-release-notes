@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: github.base_ref == 'master' && (github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]')
+    if: github.base_ref == 'master' && github.actor == 'dependabot[bot]'
     strategy:
       matrix:
         node-version: [10.x, 12.x]
@@ -29,25 +29,41 @@ jobs:
   autoapprove:
     name: Approve pull request
     runs-on: ubuntu-latest
-    if: github.base_ref == 'master' && (github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]')
+    if: github.base_ref == 'master' && github.actor == 'dependabot[bot]'
     steps:
-    - uses: hmarr/auto-approve-action@v2.0.0
-      with:
-        github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Approve
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { pull_request: pr, repository: repo } = context.payload
+
+            core.debug(`Creating APPROVE review for pull request #${pr.number}`)
+            await github.pulls.createReview({
+              owner: repo.owner.login,
+              repo: repo.name,
+              pull_number: pr.number,
+              event: "APPROVE"
+            })
+            core.debug(`Approved pull request #${pr.number}`)
 
   automerge:
     name: Merge pull request
     runs-on: ubuntu-latest
-    needs: [build,autoapprove]
-    if: github.base_ref == 'master' && (github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]')
+    needs: [build, autoapprove]
+    if: github.base_ref == 'master' && github.actor == 'dependabot[bot]'
     steps:
       - name: Merge
-        uses: actions/github-script@0.3.0
+        uses: actions/github-script@v2
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.pullRequests.merge({
-              owner: context.payload.repository.owner.login,
-              repo: context.payload.repository.name,
-              pull_number: context.payload.pull_request.number
+            const { pull_request: pr, repository: repo } = context.payload
+
+            core.debug(`Merging pull request #${pr.number}`)
+            await github.pulls.merge({
+              owner: repo.owner.login,
+              repo: repo.name,
+              pull_number: pr.number
             })
-          github-token: ${{github.token}}
+            core.debug(`Merged pull request #${pr.number}`)
