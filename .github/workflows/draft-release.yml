@@ -1,0 +1,90 @@
+name: draft-release
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  check:
+    name: Check Tag Signature
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Tag Signature
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { repository: repo, ref: tagRef } = context.payload
+
+            const tagRefInfo = await github.git.getRef({
+                owner: repo.owner.login,
+                repo: repo.name,
+                ref: tagRef.replace("refs/", "")
+            })
+            core.debug("tagRef: " + JSON.stringify(tagRefInfo))
+
+            const tagInfo = await github.git.getTag({
+              owner: repo.owner.login,
+              repo: repo.name,
+              tag_sha: tagRefInfo.data.object.sha
+            })
+            core.debug("tagInfo: " + JSON.stringify(tagInfo))
+
+            if (tagInfo.data.verification.verified != true || tagInfo.data.verification.reason != "valid") {
+              throw new Error(`Tag ${tagRef} is not signed or signature is not valid. Reason: ${tagInfo.data.verification.reason}`)
+            }
+
+            core.info(`Tag ${tagRef} signature is valid.`)
+            let signature = tagInfo.data.verification.signature
+            signature = signature.split("\n")
+            signature = signature.slice(2, -3).join("")
+            core.exportVariable("TAG_SIGNATURE", signature)
+      - name: Verify Signature Key ID
+        run: |
+          SIGNATURE_KEY_ID=$(echo -n $TAG_SIGNATURE | base64 -d | od -t x1 -An -v | tr -d ' ' | tr -d '\n' | cut -b 49-64 | tr a-z A-Z)
+          if [ "$SIGNATURE_KEY_ID" = "$ALLOWED_SIGNATURE_ID" ]; then
+            echo "Signature Key ID matched"
+            exit 0
+          else
+            echo "::error ::Signature Key ID '$SIGNATURE_KEY_ID' is not allowed to make releases."
+            exit 1
+          fi
+        env:
+          ALLOWED_SIGNATURE_ID: ${{ secrets.RELEASE_GPG_KEY_ID }}
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: check
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install -g yarn
+    - name: install and build
+      run: |
+        yarn install
+        yarn run coverage
+        yarn run build
+      env:
+        CI: true
+
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    needs: [check,build]
+    steps:
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            Pending release notes.
+          draft: true
+          prerelease: false
