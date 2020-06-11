@@ -67,8 +67,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: npm install -g yarn
-
     - name: install and build
       run: |
         yarn install
@@ -84,6 +82,10 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Get Previous Tag
         run: |
           PREV_TAG=$(git describe --abbrev=0 --tags "${{ github.ref }}^")
