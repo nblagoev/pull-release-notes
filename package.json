@@ -1,6 +1,6 @@
 {
   "name": "@nblagoev/pull-release-notes",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A command line utility to generate a PR changelog between two refs.",
   "license": "MIT",
   "author": {
