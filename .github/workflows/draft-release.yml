@@ -35,22 +35,22 @@ jobs:
 
             core.info(`Tag ${tagRef} signature is valid.`)
             let signature = tagInfo.data.verification.signature
-            signature = signature.split("\n")
-            signature = signature.slice(2, -3).join("")
+            signature = signature.split("\n").slice(2, -3).join("")
             core.exportVariable("TAG_SIGNATURE", signature)
 
       - name: Verify Signature Key ID
         run: |
           SIGNATURE_KEY_ID=$(echo -n $TAG_SIGNATURE | base64 -d | od -t x1 -An -v | tr -d ' ' | tr -d '\n' | cut -b 49-64 | tr a-z A-Z)
-          if [ "$SIGNATURE_KEY_ID" = "$ALLOWED_SIGNATURE_ID" ]; then
-            echo "Signature Key ID matched"
-            exit 0
+          SIG_IDS_LIST=$(echo $ALLOWED_SIGNATURE_IDS | tr "," "\n")
+          if [[ " ${SIG_IDS_LIST[@]} " =~ " ${SIGNATURE_KEY_ID} " ]]; then
+              echo "Signature Key ID matched"
+              exit 0
           else
             echo "::error ::Signature Key ID '$SIGNATURE_KEY_ID' is not allowed to make releases."
             exit 1
           fi
         env:
-          ALLOWED_SIGNATURE_ID: ${{ secrets.RELEASE_GPG_KEY_ID }}
+          ALLOWED_SIGNATURE_IDS: ${{ secrets.RELEASE_GPG_KEY_ID }}
 
   build:
     name: Build
