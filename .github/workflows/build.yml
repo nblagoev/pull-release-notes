@@ -5,6 +5,9 @@ on:
       - '*'
     tags-ignore:
       - 'v*'
+  pull_request:
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
