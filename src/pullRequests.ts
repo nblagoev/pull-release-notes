@@ -9,9 +9,9 @@ export interface PullRequestInfo {
     title: string
     htmlURL: string
     mergedAt: moment.Moment
-    author: string
+    author: string | undefined
     repoName: string
-    body: string
+    body: string | null
 }
 
 export class PullRequests {
@@ -26,7 +26,7 @@ export class PullRequests {
                 title: pr.data.title,
                 htmlURL: pr.data.html_url,
                 mergedAt: moment(pr.data.merged_at),
-                author: pr.data.user.login,
+                author: pr.data.user?.login,
                 repoName: pr.data.base.repo.full_name,
                 body: pr.data.body
             }
@@ -65,7 +65,7 @@ export class PullRequests {
                     title: pr.title,
                     htmlURL: pr.html_url,
                     mergedAt: moment(pr.merged_at),
-                    author: pr.user.login,
+                    author: pr.user?.login,
                     repoName: pr.base.repo.full_name,
                     body: pr.body
                 })
