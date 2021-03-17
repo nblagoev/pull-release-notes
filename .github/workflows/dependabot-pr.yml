@@ -8,7 +8,10 @@ jobs:
   autoapprove:
     name: Approve pull request
     runs-on: ubuntu-latest
-    if: github.base_ref == 'master' && github.actor == 'dependabot[bot]'
+    if: >
+      ${{ github.event.workflow_run.event == 'pull_request' &&
+          github.event.workflow_run.conclusion == 'success' &&
+          github.actor == 'dependabot[bot]' }}
     steps:
       - name: Approve
         uses: actions/github-script@v2
