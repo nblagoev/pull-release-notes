@@ -23,3 +23,13 @@ jobs:
       env:
         CI: true
     - run: ./node_modules/.bin/codecov -f coverage/*.json
+    - name: Save PR number
+      if: ${{ github.actor == 'dependabot[bot]' }}
+      run: |
+        mkdir -p ./pr
+        echo ${{ github.event.number }} > ./pr/number
+    - uses: actions/upload-artifact@v2
+      if: ${{ github.actor == 'dependabot[bot]' }}
+      with:
+        name: pr
+        path: pr/
