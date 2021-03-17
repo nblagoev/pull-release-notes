@@ -7,7 +7,7 @@ export interface CommitInfo {
     sha: string
     summary: string
     message: string
-    author: string
+    author: string | undefined
     date: moment.Moment
     prNumber: number | undefined
 }
@@ -39,8 +39,8 @@ export class Commits {
             sha: commit.sha,
             summary: commit.commit.message.split("\n")[0],
             message: commit.commit.message,
-            date: moment(commit.commit.committer.date),
-            author: commit.commit.author.name,
+            date: moment(commit.commit.committer?.date),
+            author: commit.commit.author?.name,
             prNumber: undefined
         }))
     }
