@@ -8,11 +8,14 @@ jobs:
   autoapprove:
     name: Approve pull request
     runs-on: ubuntu-latest
-    if: >
-      ${{ github.event.workflow_run.event == 'pull_request' &&
-          github.event.workflow_run.conclusion == 'success' &&
-          github.actor == 'dependabot[bot]' }}
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' && github.actor == 'dependabot[bot]'
     steps:
+      - name: Print GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "::debug::$GITHUB_CONTEXT"
+
       - name: 'Download artifact'
         uses: actions/github-script@v3
         with:
@@ -35,7 +38,7 @@ jobs:
 
       - run: unzip pr.zip
 
-      - name: Approve and Merge PR
+      - name: Approve PR
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,6 +54,14 @@ jobs:
               event: "APPROVE"
             })
             core.debug(`Approved pull request #${pr_number}`)
+
+      - name: Merge PR
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var fs = require('fs');
+            var pr_number = Number(fs.readFileSync('./number'));
 
             core.debug(`Merging pull request #${pr_number}`)
             await github.pulls.merge({
