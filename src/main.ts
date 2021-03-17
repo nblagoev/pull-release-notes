@@ -23,7 +23,7 @@ Logger.verbose = argv.verbose === true || false
 const spanRegex = /(.+)(?:[\.]{3})(.+)/
 const repoRegex = /([^\/]+)\/([^\/]+)/
 
-const tags = spanRegex.exec(argv._[0]) || []
+const tags = spanRegex.exec(argv._[0] as string) || []
 const repoLink = repoRegex.exec(argv.repo) || []
 
 const [, fromTag, toTag] = tags
