@@ -1,10 +1,8 @@
-name: build
+name: build-pr
 on:
-  push:
+  pull_request:
     branches:
-      - '*'
-    tags-ignore:
-      - 'v*'
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
